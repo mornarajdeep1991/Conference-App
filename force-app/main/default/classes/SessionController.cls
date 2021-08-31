@@ -13,6 +13,13 @@ public static List<Session__c> getSessions(String searchKey) {
   }
 }
 @AuraEnabled(cacheable=true)
+public static List<Session__c> getallSessions() {
+    return [SELECT Id, Name, Location__c, toLabel(SessionRoom__c), Description__c, format(SessionDateTime__c) dateTime,
+    (SELECT User__r.Id, User__r.Name, User__r.Description__c, User__r.Email, User__r.SmallPhotoUrl FROM SessionSpeakers__r)
+    FROM Session__c ORDER BY CreatedDate DESC LIMIT 5];
+  }
+
+@AuraEnabled(cacheable=true)
 public static Session__c getSession(Id sessionId) {
   List<Session__c> sessions = [SELECT Id, Name, Location__c,toLabel(SessionRoom__c), Description__c, format(SessionDateTime__c) dateTime,
     (SELECT User__r.Id, User__r.Name, User__r.Description__c, User__r.Email, User__r.SmallPhotoUrl FROM SessionSpeakers__r)

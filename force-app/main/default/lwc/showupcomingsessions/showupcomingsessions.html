@@ -1,0 +1,26 @@
+<template>
+    <div class="div-style">
+    <header>
+        <h2>Upcoming Conferences</h2>
+        
+    </header>
+      <template if:true={sessions}>
+    
+            <template for:each={sessions} for:item="session">
+                <lightning-card key={session.Id} class="slds-style">
+                <div key={session.Id} class="speaker-info">
+                <h2 key={session.Id}>{session.Name}</h2>
+                <p class="icon time" key={session.Id}>{session.dateTime}</p>
+                <p class="icon room" key={session.Id}>{session.SessionRoom__c}</p>
+            
+          </div>
+
+        </lightning-card>
+                    
+                    
+        </template>
+           
+    </template>
+    
+</div>
+    </template>
