@@ -1,0 +1,22 @@
+<template>
+    <template if:true={session}>
+      <lightning-card>
+        <div class="speaker-details">
+      <h2>{session.Name}</h2>
+      <p class="icon time">{session.dateTime}</p>
+      <p class="icon room">{session.SessionRoom__c}</p>
+      <h3>Abstract</h3>
+      <div class="abstract">{session.Description__c}</div>
+      <h3>Speakers</h3>
+      </div>
+      <div class="speaker-list">
+        <template if:true={session.SessionSpeakers__r}>
+          <template for:each={session.SessionSpeakers__r} for:item="speaker">
+            <c-speaker-card key={speaker.User__r.Id} speaker={speaker.User__r}>
+            </c-speaker-card>
+          </template>
+        </template>
+      </div>
+    </lightning-card>
+    </template>
+  </template>

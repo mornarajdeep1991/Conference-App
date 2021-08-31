@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/app": [
+                "app/app.js"
+            ],
+            "c/sessionDetails": [
+                "sessionDetails/sessionDetails.js"
+            ],
+            "c/sessionList": [
+                "sessionList/sessionList.js"
+            ],
+            "c/speakerCard": [
+                "speakerCard/speakerCard.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    },
+    "paths": {
+        "c/*": [
+            "*"
+        ]
+    }
+}

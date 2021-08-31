@@ -1,0 +1,18 @@
+<template>
+    <a data-index="0" key={session.Id} class="session" data-session-id={session.Id} onclick={handleSessionClick}>
+        <div>
+          <p class="title fontcolor">{session.Name}</p>
+          <p class="icon time">{session.dateTime}</p>
+          <!--<p class="icon location">{session.Location__c}</p>-->
+          <p class="icon room">{session.SessionRoom__c}</p>
+        </div>
+        <template if:true={session.SessionSpeakers__r}>
+          <div class="speaker-pictures">
+            <template for:each={session.SessionSpeakers__r} for:item="speaker">
+              <img key={speaker.User__r.Id} src={speaker.User__r.SmallPhotoUrl}
+                 alt={speaker.User__r.Name} title={speaker.User__r.Name}>
+             </template>
+          </div>
+      </template>
+    </a>
+</template>
