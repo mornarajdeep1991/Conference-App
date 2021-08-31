@@ -12,11 +12,11 @@ export default class SearchComponent extends LightningElement {
 @api labelName;
 @api readOnly = false;
 @api currentRecordId;
-@api placeholder = 'Search';
+@api placeholder = 'Search User';
 @api createRecord;
 @api fields = ['Name'];
 @api displayFields = 'Name, Email, Title';
-
+@track searchText='';
 @track error;
 
 searchTerm;
@@ -72,7 +72,6 @@ connectedCallback(){
 handleInputChange(event){
     window.clearTimeout(this.delayTimeout);
     const searchKey = event.target.value;
-    //this.isLoading = true;
     this.delayTimeout = setTimeout(() => {
         if(searchKey.length >= 2){
             search({ 
@@ -99,7 +98,6 @@ handleInputChange(event){
                 console.error('Error:', error);
             })
             .finally( ()=>{
-                //this.isLoading = false;
             });
         }
     }, DELAY);
@@ -113,36 +111,24 @@ handleSelect(event){
         return item.Id === recordId;
     });
     this.selectedRecord = selectRecord;
-    
-    const selectedEvent = new CustomEvent('lookup', {
-        bubbles    : true,
-        composed   : true,
-        cancelable : true,
+
+    const selectedEvent = new CustomEvent('userselect', {
         detail: {  
-            data : {
-                record          : selectRecord,
-                recordId        : recordId,
-                currentRecordId : this.currentRecordId
-            }
+            
+                userName          : selectRecord.Name,
+                userRecordId        : recordId
+            
         }
-    });
-    this.dispatchEvent(selectedEvent);
-}
+    }); 
+    this.dispatchEvent(selectedEvent); 
+    this.handleClose();
+} 
 
 handleClose(){
+    this.searchText=null;
     this.selectedRecord = undefined;
     this.searchRecords  = undefined;
-    const selectedEvent = new CustomEvent('lookup', {
-        bubbles    : true,
-        composed   : true,
-        cancelable : true,
-        detail: {  
-            record ,
-            recordId,
-            currentRecordId : this.currentRecordId
-        }
-    });
-    this.dispatchEvent(selectedEvent);
+ 
 }
 
 titleCase(string) {
@@ -153,38 +139,23 @@ titleCase(string) {
     return sentence;
 }
 handleChange(event){
-    //  this.log(event.target);
-    // alert('handle');
         let dataName = event.target.dataset;
-    //  alert(dataName);
         let dval = event.target;
-        
-    //  alert('test parse'+JSON.stringify(dataName));
-    //  alert('dval---'+dval);
-        // alert('test parse event'+JSON.stringify(event));
-    //  alert('test parse detail'+JSON.stringify(event.detail));
         let selectedrecordId = event.detail.value;
-        
 
-    //  alert('selectedrecordId---'+selectedrecordId);
-    //  alert('selectedrecordId length---'+selectedrecordId.length);
         if(selectedrecordId.length>0){
-        //   alert('inside val');
         this.filters.color.push( selectedrecordId );
         let _pills = [];
         for ( let i=0; i<this.pills.length; i++ ){
-        //   alert('inside for');
             _pills.push ( this.pills[i] );
         }
         _pills.push({label: dataName+':'+selectedrecordId, name: dataName});
         this.pills = _pills;
         }
         this.empty = '';
-        // this.filterData();
     } 
     handleItemRemove (event) {
         const index = parseInt(event.detail.index);
-    //  alert( index );
         let _pills = [];
         let _filters = {color: [] };
         for ( let i=0; i<this.pills.length; i++ ){
@@ -196,7 +167,6 @@ handleChange(event){
         }
         this.pills = _pills;
         this.filters = _filters;
-        // this.filterData();
     }
 
 }

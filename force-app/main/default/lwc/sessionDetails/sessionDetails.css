@@ -43,5 +43,9 @@ margin: 0 -0.5rem;
 display: flex;
 flex-direction: column;
 flex-wrap: wrap;
-margin: 0 5rem;
+margin: 0 2.7rem;
 }
+.content {
+    padding: 0 3rem;
+}
+

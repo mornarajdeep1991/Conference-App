@@ -9,8 +9,8 @@ display: flex;
 font-size: 1rem;
 justify-content: space-between;
 text-align: left;
-margin: 1rem 0;
-padding: 1rem;
+/*margin: 1rem 0;*/
+padding: 0 1rem;
 background-color: transparent;
 border: 1px solid #dddbda;
 align-items: center;

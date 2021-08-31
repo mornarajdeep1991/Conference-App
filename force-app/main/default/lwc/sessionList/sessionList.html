@@ -45,22 +45,18 @@
             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Session</h2>
         </header>
         <!-- modal body start -->
-        <lightning-record-edit-form object-api-name="Session__c" onsuccess={handleSuccess}>
+        <lightning-record-edit-form object-api-name="Session__c" onsuccess={handleSuccess} onsubmit={validate}>
         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
             
                 
                 <lightning-input-field field-name="Name" required="true">
                 </lightning-input-field>
-                <lightning-input-field field-name="Speaker__c" onchange={handleChange}/>
-                </lightning-input-field>
-                
-                <!-- <c-searchcomponent onchange={handleChange}></c-searchcomponent>-->
-                  <lightning-pill-container items={pills} onitemremove={handleItemRemove} ></lightning-pill-container>
+
+                <c-searchcomponent onuserselect={handleUserSelect}></c-searchcomponent>
+                  <lightning-pill-container items={pills} onitemremove={removeUser} ></lightning-pill-container>
                     
                 <lightning-input-field field-name="SessionDateTime__c" required="true">
                 </lightning-input-field>
-                <!--<lightning-input-field field-name="Location__c">
-                </lightning-input-field>-->
                 <lightning-input-field field-name="SessionRoom__c" required="true">
                 </lightning-input-field>
                 <lightning-input-field field-name="Description__c">
@@ -75,7 +71,8 @@
           <lightning-button
                         class="slds-m-top_small"
                         type="submit"
-                        label="Submit">
+                        label="Submit"
+                        >
                     </lightning-button>
                     </lightning-layout-item>
                     <lightning-layout-item padding="around-small">
