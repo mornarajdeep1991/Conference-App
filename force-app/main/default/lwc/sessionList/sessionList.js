@@ -2,7 +2,6 @@ import { LightningElement, track, wire } from 'lwc';
 import getSessions from '@salesforce/apex/SessionController.getSessions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import  addSpeakers from  '@salesforce/apex/SessionController.addSpeakers';
-import  getSpeakerName from  '@salesforce/apex/SessionController.getSpeakerName';
 export default class SessionList extends LightningElement {
 @track sessions=[];
 sessionId;
@@ -57,7 +56,7 @@ closeModal() {
     }
     // handle selected speakers
     handleSpeakers() {
-        addSpeakers({ sessionId: this.sessionId , speakers :this.selectedSpeakers})
+        addSpeakers({ sessionId: this.sessionId , speakers :JSON.stringify(this.selectedSpeakers)})
           .then(result => {
               this.sessionId=null;
               this.speakerList=[];
