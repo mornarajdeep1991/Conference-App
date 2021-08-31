@@ -1,14 +1,14 @@
 <template>
-    <header>
-        <img src={applogo} alt="App logo" onclick={gotoList}/>
-        <h2>Lightning Conference</h2>
-    </header>
-    <main class="content">
-         <template if:true={state}>
-            <c-session-list onsessiondetailsclick={handleSessionDetails}> </c-session-list>
-        </template>
-        <template if:false={state}>
-            <c-session-details session-id={sessionId}> </c-session-details>
-        </template>
-    </main>
+<header>
+    <img src={applogo} alt="App logo" onclick={gotoList}/>
+    <h2>Lightning Conference</h2>
+</header>
+<main class="content">
+        <template if:true={state}>
+        <c-session-list onsessiondetailsclick={handleSessionDetails}> </c-session-list>
+    </template>
+    <template if:false={state}>
+        <c-session-details session-id={sessionId}> </c-session-details>
+    </template>
+</main>
 </template>

@@ -5,198 +5,198 @@ import search from '@salesforce/apex/SearchController.search';
 const DELAY = 300;
 export default class SearchComponent extends LightningElement {
 
-    @api valueId;
-    @api valueName;
-    @api objName = 'User';
-    @api iconName = 'standard:user';
-    @api labelName;
-    @api readOnly = false;
-    @api currentRecordId;
-    @api placeholder = 'Search';
-    @api createRecord;
-    @api fields = ['Name'];
-    @api displayFields = 'Name, Email, Title';
+@api valueId;
+@api valueName;
+@api objName = 'User';
+@api iconName = 'standard:user';
+@api labelName;
+@api readOnly = false;
+@api currentRecordId;
+@api placeholder = 'Search';
+@api createRecord;
+@api fields = ['Name'];
+@api displayFields = 'Name, Email, Title';
 
-    @track error;
+@track error;
 
-    searchTerm;
-    delayTimeout;
+searchTerm;
+delayTimeout;
 
-    searchRecords;
-    selectedRecord;
-    objectLabel;
-    isLoading = false;
+searchRecords;
+selectedRecord;
+objectLabel;
+isLoading = false;
 
-    field;
-    field1;
-    field2;
+field;
+field1;
+field2;
 
-    ICON_URL = '/apexpages/slds/latest/assets/icons/{0}-sprite/svg/symbols.svg#{1}';
+ICON_URL = '/apexpages/slds/latest/assets/icons/{0}-sprite/svg/symbols.svg#{1}';
 
-    connectedCallback(){
+connectedCallback(){
 
-        let icons           = this.iconName.split(':');
-        this.ICON_URL       = this.ICON_URL.replace('{0}',icons[0]);
-        this.ICON_URL       = this.ICON_URL.replace('{1}',icons[1]);
-        if(this.objName.includes('__c')){
+    let icons           = this.iconName.split(':');
+    this.ICON_URL       = this.ICON_URL.replace('{0}',icons[0]);
+    this.ICON_URL       = this.ICON_URL.replace('{1}',icons[1]);
+    if(this.objName.includes('__c')){
 
-        }else{
-            this.objectLabel = this.objName;
-        }
-        this.objectLabel    = this.titleCase(this.objectLabel);
-        let fieldList;
-        if( !Array.isArray(this.displayFields)){
-            fieldList       = this.displayFields.split(',');
-        }else{
-            fieldList       = this.displayFields;
-        }
-        
-        if(fieldList.length > 1){
-            this.field  = fieldList[0].trim();
-            this.field1 = fieldList[1].trim();
-        }
-        if(fieldList.length > 2){
-            this.field2 = fieldList[2].trim();
-        }
-        let combinedFields = [];
-        fieldList.forEach(field => {
-            if( !this.fields.includes(field.trim()) ){
-                combinedFields.push( field.trim() );
-            }
-        });
-
-        this.fields = combinedFields.concat( JSON.parse(JSON.stringify(this.fields)) );
-        
+    }else{
+        this.objectLabel = this.objName;
     }
+    this.objectLabel    = this.titleCase(this.objectLabel);
+    let fieldList;
+    if( !Array.isArray(this.displayFields)){
+        fieldList       = this.displayFields.split(',');
+    }else{
+        fieldList       = this.displayFields;
+    }
+    
+    if(fieldList.length > 1){
+        this.field  = fieldList[0].trim();
+        this.field1 = fieldList[1].trim();
+    }
+    if(fieldList.length > 2){
+        this.field2 = fieldList[2].trim();
+    }
+    let combinedFields = [];
+    fieldList.forEach(field => {
+        if( !this.fields.includes(field.trim()) ){
+            combinedFields.push( field.trim() );
+        }
+    });
 
-    handleInputChange(event){
-        window.clearTimeout(this.delayTimeout);
-        const searchKey = event.target.value;
-        //this.isLoading = true;
-        this.delayTimeout = setTimeout(() => {
-            if(searchKey.length >= 2){
-                search({ 
-                    objectName : this.objName,
-                    fields     : this.fields,
-                    searchTerm : searchKey 
-                })
-                .then(result => {
-                    let stringResult = JSON.stringify(result);
-                    let allResult    = JSON.parse(stringResult);
-                    allResult.forEach( record => {
-                        record.FIELD1 = record[this.field];
-                        record.FIELD2 = record[this.field1];
-                        if( this.field2 ){
-                            record.FIELD3 = record[this.field2];
-                        }else{
-                            record.FIELD3 = '';
-                        }
-                    });
-                    this.searchRecords = allResult;
-                    
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                .finally( ()=>{
-                    //this.isLoading = false;
+    this.fields = combinedFields.concat( JSON.parse(JSON.stringify(this.fields)) );
+    
+}
+
+handleInputChange(event){
+    window.clearTimeout(this.delayTimeout);
+    const searchKey = event.target.value;
+    //this.isLoading = true;
+    this.delayTimeout = setTimeout(() => {
+        if(searchKey.length >= 2){
+            search({ 
+                objectName : this.objName,
+                fields     : this.fields,
+                searchTerm : searchKey 
+            })
+            .then(result => {
+                let stringResult = JSON.stringify(result);
+                let allResult    = JSON.parse(stringResult);
+                allResult.forEach( record => {
+                    record.FIELD1 = record[this.field];
+                    record.FIELD2 = record[this.field1];
+                    if( this.field2 ){
+                        record.FIELD3 = record[this.field2];
+                    }else{
+                        record.FIELD3 = '';
+                    }
                 });
-            }
-        }, DELAY);
-    }
+                this.searchRecords = allResult;
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally( ()=>{
+                //this.isLoading = false;
+            });
+        }
+    }, DELAY);
+}
 
-    handleSelect(event){
-        
-        let recordId = event.currentTarget.dataset.recordId;
-        
-        let selectRecord = this.searchRecords.find((item) => {
-            return item.Id === recordId;
-        });
-        this.selectedRecord = selectRecord;
-        
-        const selectedEvent = new CustomEvent('lookup', {
-            bubbles    : true,
-            composed   : true,
-            cancelable : true,
-            detail: {  
-                data : {
-                    record          : selectRecord,
-                    recordId        : recordId,
-                    currentRecordId : this.currentRecordId
-                }
-            }
-        });
-        this.dispatchEvent(selectedEvent);
-    }
-
-    handleClose(){
-        this.selectedRecord = undefined;
-        this.searchRecords  = undefined;
-        const selectedEvent = new CustomEvent('lookup', {
-            bubbles    : true,
-            composed   : true,
-            cancelable : true,
-            detail: {  
-                record ,
-                recordId,
+handleSelect(event){
+    
+    let recordId = event.currentTarget.dataset.recordId;
+    
+    let selectRecord = this.searchRecords.find((item) => {
+        return item.Id === recordId;
+    });
+    this.selectedRecord = selectRecord;
+    
+    const selectedEvent = new CustomEvent('lookup', {
+        bubbles    : true,
+        composed   : true,
+        cancelable : true,
+        detail: {  
+            data : {
+                record          : selectRecord,
+                recordId        : recordId,
                 currentRecordId : this.currentRecordId
             }
-        });
-        this.dispatchEvent(selectedEvent);
-    }
+        }
+    });
+    this.dispatchEvent(selectedEvent);
+}
 
-    titleCase(string) {
-        var sentence = string.toLowerCase().split(" ");
-        for(var i = 0; i< sentence.length; i++){
-            sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+handleClose(){
+    this.selectedRecord = undefined;
+    this.searchRecords  = undefined;
+    const selectedEvent = new CustomEvent('lookup', {
+        bubbles    : true,
+        composed   : true,
+        cancelable : true,
+        detail: {  
+            record ,
+            recordId,
+            currentRecordId : this.currentRecordId
         }
-        return sentence;
+    });
+    this.dispatchEvent(selectedEvent);
+}
+
+titleCase(string) {
+    var sentence = string.toLowerCase().split(" ");
+    for(var i = 0; i< sentence.length; i++){
+        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
     }
-    handleChange(event){
-        //  this.log(event.target);
-       // alert('handle');
-          let dataName = event.target.dataset;
-        //  alert(dataName);
-          let dval = event.target;
-          
-        //  alert('test parse'+JSON.stringify(dataName));
-        //  alert('dval---'+dval);
-          // alert('test parse event'+JSON.stringify(event));
-        //  alert('test parse detail'+JSON.stringify(event.detail));
-          let selectedrecordId = event.detail.value;
-          
-  
-        //  alert('selectedrecordId---'+selectedrecordId);
-        //  alert('selectedrecordId length---'+selectedrecordId.length);
-          if(selectedrecordId.length>0){
-         //   alert('inside val');
-           this.filters.color.push( selectedrecordId );
-            let _pills = [];
-            for ( let i=0; i<this.pills.length; i++ ){
-           //   alert('inside for');
-              _pills.push ( this.pills[i] );
-            }
-            _pills.push({label: dataName+':'+selectedrecordId, name: dataName});
-            this.pills = _pills;
-          }
-          this.empty = '';
-         // this.filterData();
-        } 
-        handleItemRemove (event) {
-          const index = parseInt(event.detail.index);
-        //  alert( index );
-          let _pills = [];
-          let _filters = {color: [] };
-          for ( let i=0; i<this.pills.length; i++ ){
-            let pill = this.pills[i];
-            if ( i !== index ){
-              _filters[pill.name].push(pill.label);
-              _pills.push( pill );
-            }
-          }
-          this.pills = _pills;
-          this.filters = _filters;
-         // this.filterData();
+    return sentence;
+}
+handleChange(event){
+    //  this.log(event.target);
+    // alert('handle');
+        let dataName = event.target.dataset;
+    //  alert(dataName);
+        let dval = event.target;
+        
+    //  alert('test parse'+JSON.stringify(dataName));
+    //  alert('dval---'+dval);
+        // alert('test parse event'+JSON.stringify(event));
+    //  alert('test parse detail'+JSON.stringify(event.detail));
+        let selectedrecordId = event.detail.value;
+        
+
+    //  alert('selectedrecordId---'+selectedrecordId);
+    //  alert('selectedrecordId length---'+selectedrecordId.length);
+        if(selectedrecordId.length>0){
+        //   alert('inside val');
+        this.filters.color.push( selectedrecordId );
+        let _pills = [];
+        for ( let i=0; i<this.pills.length; i++ ){
+        //   alert('inside for');
+            _pills.push ( this.pills[i] );
         }
+        _pills.push({label: dataName+':'+selectedrecordId, name: dataName});
+        this.pills = _pills;
+        }
+        this.empty = '';
+        // this.filterData();
+    } 
+    handleItemRemove (event) {
+        const index = parseInt(event.detail.index);
+    //  alert( index );
+        let _pills = [];
+        let _filters = {color: [] };
+        for ( let i=0; i<this.pills.length; i++ ){
+        let pill = this.pills[i];
+        if ( i !== index ){
+            _filters[pill.name].push(pill.label);
+            _pills.push( pill );
+        }
+        }
+        this.pills = _pills;
+        this.filters = _filters;
+        // this.filterData();
+    }
 
 }

@@ -1,16 +1,16 @@
 <template>
-  <lightning-layout horizontal-align="space">
-    <lightning-layout-item flexibility="auto">
-    <div class="card">
-      <div class="header">
-        <img src={speaker.SmallPhotoUrl} alt="Speaker picture">
-        <div>
-          <p class="title">{speaker.Name}</p>
-          <p class="icon email">{speaker.Email}</p>
-        </div>
+<lightning-layout horizontal-align="space">
+  <lightning-layout-item flexibility="auto">
+  <div class="card">
+    <div class="header">
+      <img src={speaker.SmallPhotoUrl} alt="Speaker picture">
+      <div>
+        <p class="title">{speaker.Name}</p>
+        <p class="icon email">{speaker.Email}</p>
       </div>
-      <p>{speaker.AboutMe}</p>
     </div>
-    </lightning-layout-item>
-    </lightning-layout>
-  </template>
+    <p>{speaker.AboutMe}</p>
+  </div>
+  </lightning-layout-item>
+  </lightning-layout>
+</template>
