@@ -2,6 +2,8 @@ import { LightningElement, api, track, wire } from 'lwc';
 import getallSessions from '@salesforce/apex/SessionController.getallSessions';
 export default class Showupcomingsessions extends LightningElement {
 @track sessions=[];
+@api session;
+sessionId;
 @wire(getallSessions)
 wiredSession({ error, data }) {
   if (data) {

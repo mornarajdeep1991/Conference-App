@@ -3,7 +3,6 @@
     <div>
         <p class="title fontcolor">{session.Name}</p>
         <p class="icon time">{session.dateTime}</p>
-        <!-- <p class="utility:connected_apps">{session.Location__c}</p>-->
         <p class="icon room">{session.SessionRoom__c}</p>
     </div>
     <template if:true={session.SessionSpeakers__r}>

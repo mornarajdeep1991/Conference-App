@@ -56,6 +56,18 @@
         .div-style {
             background-color: lightblue;
           }
+    .div-icon {
+        padding-left: 280px;
+        box-sizing: border-box;
+        font-weight: bold;
+        color: #039be5;
+    }     
+    .p-icon {
+        padding-left: 200px;
+        box-sizing: border-box;
+        color: #039be5;
+        font-weight: bolder;
+    }  
           
     
     

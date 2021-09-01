@@ -14,6 +14,16 @@
                 <p class="icon room" key={session.Id}>{session.SessionRoom__c}</p>
             
           </div>
+          <div class="speaker-list">
+            <template if:true={session.SessionSpeakers__r}>
+                <p class="p-icon">Speakers</p>
+              <template for:each={session.SessionSpeakers__r} for:item="speaker">
+                  <div key={speaker.Id} class="div-icon">
+                    • {speaker.User__r.Name}
+                </div>
+              </template>
+            </template>
+          </div>
 
         </lightning-card>
                     

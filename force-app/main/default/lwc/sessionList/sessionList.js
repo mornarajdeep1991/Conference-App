@@ -7,13 +7,12 @@ export default class SessionList extends LightningElement {
 sessionId;
 state = 'list';
 @track selectedSpeakers=[];
-@track removedSpeakers=[];
 @track pills = [];
 @track selectedrecordname;
 @track filters = {color: []};
-  @track searchKey = '';
-  @track bShowModal = false;
-  @wire(getSessions, { searchKey: '$searchKey' })
+@track searchKey = '';
+@track bShowModal = false;
+@wire(getSessions, { searchKey: '$searchKey' })
   
   wiredSessions({ error, data }) {
     if (data) {
@@ -24,12 +23,10 @@ state = 'list';
     }
   }
   openModal() {    
-    // to open modal window set 'bShowModal' tarck value as true
     this.bShowModal = true;
 }
 
 closeModal() {    
-    // to close modal window set 'bShowModal' tarck value as false
     this.bShowModal = false;
 }
   
@@ -54,6 +51,7 @@ closeModal() {
     this.dispatchEvent(evt);
       this.handleSpeakers();
     }
+
     // handle selected speakers
     handleSpeakers() {
         addSpeakers({ sessionId: this.sessionId , speakers :JSON.stringify(this.selectedSpeakers)})
@@ -62,7 +60,7 @@ closeModal() {
               this.speakerList=[];
           })
           .catch(error => {
-                alert('errorrr=='+JSON.stringify(error));
+                this.error=error;
           });
           location.reload();
   }
@@ -77,30 +75,23 @@ closeModal() {
     }
 
     handleUserSelect(event){
-      alert(JSON.stringify(event.detail));
-      console.log(JSON.stringify(event.detail));
       let selectedUser = {label:event.detail.userName}
       this.pills.push(selectedUser);
       this.selectedSpeakers.push(event.detail.userRecordId);
-      console.log(JSON.stringify(this.selectedSpeakers));
     }
+
     removeUser(event){
       const index = event.detail.index;
-        
       const _item = this.pills;
       _item.splice(index, 1);
       this.pills = [..._item];
-
       const _userItems = this.selectedSpeakers;
       _userItems.splice(index, 1);
       this.selectedSpeakers = [..._userItems];
-      console.log(JSON.stringify(this.selectedSpeakers));
-
     }
+
     validate(event){
-      console.log(this.selectedSpeakers.length);
       if(this.selectedSpeakers.length<=0){
-        
         const evt = new ShowToastEvent({
           title: 'Error',
           message: 'Speakers must be selected',

@@ -33,7 +33,7 @@ field2;
 
 ICON_URL = '/apexpages/slds/latest/assets/icons/{0}-sprite/svg/symbols.svg#{1}';
 
-connectedCallback(){
+ connectedCallback(){
 
     let icons           = this.iconName.split(':');
     this.ICON_URL       = this.ICON_URL.replace('{0}',icons[0]);
@@ -67,7 +67,7 @@ connectedCallback(){
 
     this.fields = combinedFields.concat( JSON.parse(JSON.stringify(this.fields)) );
     
-}
+} 
 
 handleInputChange(event){
     window.clearTimeout(this.delayTimeout);
@@ -138,35 +138,5 @@ titleCase(string) {
     }
     return sentence;
 }
-handleChange(event){
-        let dataName = event.target.dataset;
-        let dval = event.target;
-        let selectedrecordId = event.detail.value;
-
-        if(selectedrecordId.length>0){
-        this.filters.color.push( selectedrecordId );
-        let _pills = [];
-        for ( let i=0; i<this.pills.length; i++ ){
-            _pills.push ( this.pills[i] );
-        }
-        _pills.push({label: dataName+':'+selectedrecordId, name: dataName});
-        this.pills = _pills;
-        }
-        this.empty = '';
-    } 
-    handleItemRemove (event) {
-        const index = parseInt(event.detail.index);
-        let _pills = [];
-        let _filters = {color: [] };
-        for ( let i=0; i<this.pills.length; i++ ){
-        let pill = this.pills[i];
-        if ( i !== index ){
-            _filters[pill.name].push(pill.label);
-            _pills.push( pill );
-        }
-        }
-        this.pills = _pills;
-        this.filters = _filters;
-    }
 
 }
